@@ -31,7 +31,7 @@ describe('2025_day_01', () => {
         expect(count_stuff(")())())")).toBe(-3);
     });
     it('part1', async () => {
-        const input = fs.readFileSync("test/2015/day01/input.txt", 'utf-8');
+        const input = fs.readFileSync("2015/day01/input.txt", 'utf-8');
         expect(count_stuff(input)).toBe(74);
     });
     it('example2', async () => {
@@ -39,7 +39,7 @@ describe('2025_day_01', () => {
         expect(findBasementPosition("()())")).toBe(5);
     });
     it('part2', async () => {
-        const input = fs.readFileSync("test/2015/day01/input.txt", 'utf-8');
+        const input = fs.readFileSync("2015/day01/input.txt", 'utf-8');
         expect(findBasementPosition(input)).toBe(1795);
     });
 });
