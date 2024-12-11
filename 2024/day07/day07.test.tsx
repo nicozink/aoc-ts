@@ -29,39 +29,41 @@ function readEquations(path: string): Equation[] {
     return equations;
 }
 
-function hasSolution(equation: Equation, concatenation: boolean): boolean {
-    equation = structuredClone(equation);
+function hasSolution(equation: Equation, startIndex: number, startTotal: number, concatenation: boolean): boolean {
     let operations = equation.operations;
-    if (operations.length == 1) {
-        return equation.result == operations[0];
-    }
 
-    if (operations[0] > equation.result) {
-        return false;
-    }
+    let stack = [[startIndex, startTotal]];
+    while (stack.length > 0) {
+        let next = stack.pop()!;
+        let index = next[0];
+        let total = next[1];
 
-    let firstNumber = operations.shift();
-    let secondNumber = operations[0];
-
-    if (!firstNumber) {
-        throw new Error("Expected a value.");
-    }
-
-    operations[0] = firstNumber + secondNumber;
-    if (hasSolution(equation, concatenation)) {
-        return true;
-    }
-
-    operations[0] = firstNumber * secondNumber;
-    if (hasSolution(equation, concatenation)) {
-        return true;
-    }
-
-    if (concatenation) {
-        let concatenated = `${firstNumber}${secondNumber}`;
-        operations[0] = parseInt(concatenated);
-        if (hasSolution(equation, concatenation)) {
-            return true;
+        if (index == operations.length) {
+            if (equation.result == total) {
+                return true;
+            } else {
+                continue;
+            }
+        }
+    
+        if (total > equation.result) {
+            continue;
+        }
+    
+        let firstNumber = total;
+        let secondNumber = operations[index];
+    
+        index++;
+        total = firstNumber + secondNumber;
+        stack.push([index, total]);
+    
+        total = firstNumber * secondNumber;
+        stack.push([index, total]);
+    
+        if (concatenation) {
+            let length = Math.floor(Math.log10(secondNumber)) + 1;
+            total = firstNumber * Math.pow(10, length) + secondNumber;
+            stack.push([index, total]);
         }
     }
 
@@ -73,7 +75,7 @@ function getCalibrationResult(path: string, concatenation: boolean): number {
 
     let result = 0;
     for (var equation of equations) {
-        if (hasSolution(equation, concatenation)) {
+        if (hasSolution(equation, 1, equation.operations[0], concatenation)) {
             result += equation.result;
         }
     }
