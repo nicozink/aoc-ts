@@ -14,5 +14,8 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "z3-solver": "^4.15.4"
   }
 }
